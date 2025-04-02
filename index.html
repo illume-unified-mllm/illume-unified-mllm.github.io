@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ILLUME+: Illuminating Unified MLLM with Dual Visual Tokenization and Diffusion Refinement">
+  <meta name="keywords" content="ILLUME+, unified multimodal large langauge models, vision-language models, image understanding, image generation, unified multimodal understanding and generation model.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ILLUME+: Illuminating Unified MLLM with Dual Visual Tokenization and Diffusion Refinement</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/logo.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressive-image.js/dist/progressive-image.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="https://kit.fontawesome.com/d3915a16e2.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+  .chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    text-align: left; 
+  }
+
+  .chat-history1 {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    text-align: left; 
+  }
+
+  .chat-history2 {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    text-align: left; 
+  }
+
+  #results-carousel .prompt {
+    max-height: 100%; 
+    max-width: 100%; 
+    object-fit: contain;
+    display: block; 
+    margin: auto; 
+  }
+
+  .prompt {
+    display: flex; 
+    align-items: center;
+  }
+
+</style>
+
+<body>
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"> <img id="teaser" width="10%" src="./static/images/logo.png"> <b>ILLUME+</b>  </h1>
+          <h3 class="title is-3 publication-title"> Illuminating Unified MLLM with </h3>
+          <h3 class="title is-3 publication-title"> Dual Visual Tokenization and Diffusion Refinement </h3>
+          <!-- <h5 class="title is-4 publication-title"> <span style="color:red">NeulIPS 2025</span> </h5> -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=B5zcj4wAAAAJ">Runhui Huang</a><sup>2∗</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=yHxwwacAAAAJ">Chunwei Wang</a><sup>1∗</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=9MFtO3gAAAAJ">Junwei Yang</a><sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=YIt8thUAAAAJ">Guansong Lu</a><sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              Yunlong Yuan<sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=OEPMQEMAAAAJ">Jianhua Han</a><sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://houlu369.github.io/">Lu Hou</a><sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              Wei Zhang<sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=zh-CN&user=2p7x6OUAAAAJ">Lanqing Hong</a><sup>1</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://hszhao.github.io/">Hengshuang Zhao</a><sup>2&dagger;</sup>,
+            </span> 
+            <span class="author-block">
+              <a href="https://xuhangcn.github.io/">Hang Xu</a><sup>1&Dagger;</sup>
+            </span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Huawei Noah's Ark Lab</span>
+            <span class="author-block"><sup>2</sup>The University of Hong Kong,</span>
+            <br>
+          </div>
+          <div class="is-size-6 publication-authors">
+            <span class="author-block">(<sup>*</sup>Equal contribution.
+            <sup><span>&dagger;</span></sup>Corresponding authors.
+            <sup><span>&Dagger;</span></sup>Project leader.
+            )</span>
+          </div>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Arxiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/illume-unified-mllm/ILLUME"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Demo Link. -->
+              <span class="link-block">
+                <a href="" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="far fa-images"></i>
+                  </span>
+                  <span>Demo(Comming soon)</span>
+                </a>
+              </span>
+              <!-- Model Link. -->
+              <span class="link-block">
+                <a href="" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-share-square"></i>
+                  </span>
+                  <span>Model(Comming soon)</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel" style="height: 50vh; width: 95%; margin: 0 auto; display: flex; overflow: hidden; justify-content: center; " >
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; ">
+            <img src="./static/images/gen/0.png" style="max-height:100%;" />
+          </div>
+        </div>
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style=" flex-direction: column; justify-content: center; height: 800px; width: 100%">
+            <img src="./static/images/gen/1.png" style="max-height:100%; " />
+          </div>
+        </div>
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; width: 100%">
+            <img src="./static/images/gen/2.png" style="max-height:100%;" />
+          </div>
+        </div>
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; height: 800px; width: 100% ">
+            <img src="./static/images/gen/3.png" style="max-height:100%;" />
+          </div>
+        </div>
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; ; width: 100% ">
+            <img src="./static/images/gen/4.png" style="max-height:100%;" />
+          </div>
+        </div>
+
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; height: 800px ">
+            <img src="./static/images/edit/0.png" style="max-height:100%;" />
+          </div>
+        </div>
+
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; height: 800px ">
+            <img src="./static/images/edit/1.png" style="max-height:100%;" />
+          </div>
+        </div>
+                
+        <div class="item item-chair-tp" style="text-align: center;">
+          <div class="prompt" style="flex-direction: column; justify-content: center; height: 800px ">
+            <img src="./static/images/edit/2.png" style="max-height:100%;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousels = bulmaCarousel.attach('#results-carousel', {
+      slidesToScroll: 1,
+      slidesToShow: 1,
+      infinite: true,
+    });
+  });
+</script>
+
+<section class="section" style="background-color: #f1f1f1;">
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-five-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We present ILLUME+, an enhanced version of the previous ILLUME model,
+            which leverages dual visual tokenization and a diffusion decoder to improve both
+            deep semantic understanding and high-fidelity image generation. Existing unified
+            models have struggled to simultaneously handle the three fundamental capabilities
+            expected of a unified model: understanding, generation, and editing. Models like
+            Chameleon and EMU3 utilize VQGAN for image discretization, due to the lack
+            of deep semantic interaction, they lag behind specialist models like LLaVA in
+            visual understanding tasks. To mitigate this, LaViT and ILLUME employ semantic
+            encoders for tokenization, but they struggle with image editing due to poor tex-
+            ture preservation. Meanwhile, Janus series decouples the input and output image
+            representation, limiting their abilities to seamlessly handle interleaved image-text
+            understanding and generation. In contrast, ILLUME+ introduces a unified dual
+            visual tokenizer, DualViTok, which preserves both fine-grained textures and text-
+            aligned semantics while enabling a coarse-to-fine image representation strategy for
+            multimodal understanding and generation. Additionally, we employ a diffusion
+            model as the image detokenizer for enhanced generation quality and efficient super-
+            resolution. ILLUME+ follows a continuous-input, discrete-output scheme within
+            the unified Multimodal Large Language Model (MLLM) and adopts a progressive
+            training procedure that supports dynamic resolution across the vision tokenizer,
+            MLLM, and diffusion decoder. ILLUME+ (3B) exhibits competitive performance
+            against existing unified MLLMs and specialized models across multimodal un-
+            derstanding, generation, and editing benchmarks. With its strong performance,
+            ILLUME+ provides a scalable and versatile foundation for future multimodal ap-
+            plications.
+          </p> 
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+    <!-- conflicts. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-five-fifths">
+        <h2 class="title is-3">Dual Vision Tokenizer</h2>
+        <div class="teaser">
+          <img width="40%" src="./static/images/tokenizer_framework.png"  width="800" height="800">
+        </div>
+        <p><br/></p>  
+        <div class="content has-text-justified">
+          <p>
+            We introduce the Dual Vision Tokenizer (DualViTok), 
+            a dual-branch vision tokenizer designed to capture both deep semantics and fine-grained textures. 
+            The semantic branch utilizes a pre-trained text-aligned vision encoder for semantic feature extraction,
+            supervised by feature reconstruction loss. In parallel, the pixel branch integrates quantized features
+            from both the semantic encoder and a CNN-based pixel encoder to enhance pixel-level reconstruction.
+            To improve robustness against incorrect token predictions in autoregressive generation, we introduce
+            noise injection during training by randomly perturbing visual tokens. Despite its simplicity, 
+            DualViTok is specifically designed for unified models, 
+            ensuring both semantic and texture preservation while maintaining robust token decoding.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ safety persists. -->
+  </div>
+</section>
+
+<section class="section" style="background-color: #f1f1f1;">
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-five-fifths">
+            <h2 class="title is-3">Unified MLLM with Coarse-to-fine Image Representation</h2>
+
+        <br/>
+        <div class="teaser">
+          <img width="60%" src="./static/images/mllm_framework.png">
+        </div>
+        <div class="teaser">
+          <img width="60%" src="./static/images/coarse_to_fine_representation.png">
+        </div>
+        <p><br/></p>
+        <div class="content has-text-justified">
+          <p>
+            We adopt a coarse-to-fine strategy, first generating semantic tokens followed by pixel tokens. 
+            This sequential arrangement enables LLMs to utilize a unified LM head with a simple vocabulary expansion 
+            while leveraging semantic visual tokens as a bridge to enhance alignment between text and visual textures. 
+            Additionally, to prevent information loss at the input stage, 
+            we employ a continuous-input, discrete-output scheme following
+            ILLUME, using pre-quantized continuous features as inputs while generating discrete tokens for
+            image synthesis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-five-fifths">
+          <h2 class="title is-3">Diffusion Decoder with Super-resolution</h2>
+      <br/>
+      <div class="teaser">
+        <img width="50%" src="./static/images/diffusion_decoder_framework.png">
+      </div>
+      <p><br/></p>
+      <div class="content has-text-justified">
+        <p>
+          We incorporate a diffusion model as an optional choice for image generation, offering two key benefits: 
+          <b>(i) Higher generation quality.</b>
+          Diffusion models refine details and reduce artifacts, surpassing direct token decoding from a vision tokenizer in both fidelity and robustness. 
+          <b>(ii) Efficient super-resolution.</b>
+          They upscale images during decoding, mitigating the token explosion issue in autoregressive high-resolution generation.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-five-fifths">
+          <h2 class="title is-3">Progressive Training Procedure for Flexible Visual Resolution.</h2>
+      <div class="teaser">
+        <img width="100%" src="./static/images/training_procedure.png">
+      </div>
+      <br/>
+      <p><br/></p>
+      <div class="content has-text-justified">
+        <p>
+          We employ a progressive training procedure for all the above three modules, 
+          gradually increasing resolution from fixed low to flexible high, to ensure training stability and final performance. 
+          Additionally, during MLLM training, we incrementally increase tasks diversity and complexity, with carefully designed data distribution for each stage.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-five-fifths">
+          <h2 class="title is-3">Dynamic Resoluton Image Generation.</h2>
+      <div class="teaser">
+        <img width="100%" src="./static/images/vis_gen.png">
+      </div>
+      <br/>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-five-fifths">
+          <h2 class="title is-3">Versatile Image Editing.</h2>
+      <div class="teaser">
+        <img width="100%" src="./static/images/vis_edit.png">
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" style="background-color: #f1f1f1;">
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded" style="width: 80%;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-five-fifths">
+          <h2 class="title is-3">Versatile Image Understanding.</h2>
+      <div class="teaser">
+        <img width="100%" src="./static/images/vis_und.png">
+      </div>
+      <br/>
+      <p><br/></p>
+      <div class="content has-text-justified">
+        <p>
+          <!-- We employ a progressive training procedure for all the above three modules, 
+          gradually increasing resolution from fixed low to flexible high, to ensure training stability and final performance. 
+          Additionally, during MLLM training, we incrementally increase tasks diversity and complexity, with carefully designed data distribution for each stage. -->
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{huang2025illume_plus,
+  title={ILLUME+: Illuminating Unified MLLM with Dual Visual Tokenization and Diffusion Refinement},
+  author={Huang, Runhui and Wang, Chunwei and Yang, Junwei and Lu, Guansong and Yuan, Yunlong and Han, Jianhua and Hou, Lu and Zhang, Wei and Hong, Lanqing and Zhao, Hengshuang and Xu, Hang}
+  journal={arXiv preprint arXiv:****},
+  year={2025}
+}</code></pre>
+  </div>
+</section> -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <!-- <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a> -->
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <center>The website template was adapted from <a href="https://nerfies.github.io/">Nerfies</a>.<br/>
+          @ ILLUME Team
+          </center>
+        <p></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
