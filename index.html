@@ -309,22 +309,18 @@
             Chameleon and EMU3 utilize VQGAN for image discretization, due to the lack
             of deep semantic interaction, they lag behind specialist models like LLaVA in
             visual understanding tasks. To mitigate this, LaViT and ILLUME employ semantic
-            encoders for tokenization, but they struggle with image editing due to poor tex-
-            ture preservation. Meanwhile, Janus series decouples the input and output image
+            encoders for tokenization, but they struggle with image editing due to poor texture preservation. Meanwhile, Janus series decouples the input and output image
             representation, limiting their abilities to seamlessly handle interleaved image-text
             understanding and generation. In contrast, ILLUME+ introduces a unified dual
-            visual tokenizer, DualViTok, which preserves both fine-grained textures and text-
-            aligned semantics while enabling a coarse-to-fine image representation strategy for
+            visual tokenizer, DualViTok, which preserves both fine-grained textures and text-aligned semantics while enabling a coarse-to-fine image representation strategy for
             multimodal understanding and generation. Additionally, we employ a diffusion
             model as the image detokenizer for enhanced generation quality and efficient super-
             resolution. ILLUME+ follows a continuous-input, discrete-output scheme within
             the unified Multimodal Large Language Model (MLLM) and adopts a progressive
             training procedure that supports dynamic resolution across the vision tokenizer,
             MLLM, and diffusion decoder. ILLUME+ (3B) exhibits competitive performance
-            against existing unified MLLMs and specialized models across multimodal un-
-            derstanding, generation, and editing benchmarks. With its strong performance,
-            ILLUME+ provides a scalable and versatile foundation for future multimodal ap-
-            plications.
+            against existing unified MLLMs and specialized models across multimodal understanding, generation, and editing benchmarks. With its strong performance,
+            ILLUME+ provides a scalable and versatile foundation for future multimodal applications.
           </p> 
           </p>
         </div>
